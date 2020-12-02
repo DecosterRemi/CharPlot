@@ -1,0 +1,11 @@
+Package: ClusterCharPlot
+Type: Package
+Title: Uni and multivariate characterization of a clustering process.
+Version: 0.1.0
+Author: Decoster Remi, Laine Pauline, Pic Romain
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: Graphical representations of a clusters and partition evaluations measure
+License: Currently none
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
