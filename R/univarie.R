@@ -47,10 +47,6 @@ univarie <- function(x,y){
   return(instance)
 }
 
-ggplot.univarie <- function(obj){
-  y <- as.factor(test$y.values)
-  ggplot(test$x.values, aes(test$x.values[,1], test$x.values[,2], colour=y))+geom_point()
-}
 #' Function calcul correlation
 #'
 #' @param x DataFrame of features numeric
@@ -231,12 +227,27 @@ effectsize.univarie <- function(x,y,obj){
 
 ##Graphique radar
 #graphique radar
-radar <- function(vt){
-  vtradar <- vt %>%
+
+radar <- function(fct)
+  UseMethod(generic = "radar")
+
+radar.default <- function(fct){
+  vtradar <- fct %>%
     as_tibble() %>%
     mutate_each(rescale)
 
-  radar <- cbind(row.names(vt), vtradar)
+  radar <- cbind(row.names(fct), vtradar)
+
+  graph <- ggradar(radar, legend.position="right", legend.text.size=9, group.point.size=3, group.line.width=0.5)
+  return(graph)
+}
+
+radar.univarie <- function(fct){
+  vtradar <- fct %>%
+    as_tibble() %>%
+    mutate_each(rescale)
+
+  radar <- cbind(row.names(fct), vtradar)
 
   graph <- ggradar(radar, legend.position="right", legend.text.size=9, group.point.size=3, group.line.width=0.5)
   return(graph)
