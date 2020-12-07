@@ -119,7 +119,7 @@ correlation_circle <- function(X,data,clusters_name){
 #'  \item{"confusion_matrix"}{If y_true was provided, this is the confusionMatrix between the predicted clustering and the real one.}
 #' }
 #' 
-#' @import stat caret e1071 rlist
+#' @import stats caret e1071 rlist
 #'
 #' @examples
 #' require(readxl)
