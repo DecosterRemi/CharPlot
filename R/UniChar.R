@@ -104,7 +104,6 @@ vcramer.UniChar <- function(obj, y, label = NULL){
 #' Used to instance categorical and numerical data in the UniChar class.
 #'
 #' @return \item{list_categ_num}{  a list of 2 vectors. Labels of categorical and numerical variables}
-
 #' @export
 #' @examples
 #' df <- read_excel('Autos.xlsx')
@@ -452,7 +451,7 @@ effectsize.UniChar <- function(obj,y){
 #' @param ind an indicator to represent graphically (ex: effect size, Cramer's V, etc.)
 #' @description Radar plot the indicator
 #'
-#' @import ggradar dplyr scales tibble
+#' @import  dplyr scales tibble
 #'
 #' @return graph
 #'
@@ -483,7 +482,7 @@ radar <- function(ind)
 #' @param ind an indicator to represent graphically (ex: effect size, Cramer's V, etc.)
 #' @description Radar plot the indicator
 #'
-#' @import ggradar dplyr scales tibble
+#' @import  dplyr scales tibble
 #'
 #' @return graph
 #'
@@ -519,7 +518,7 @@ radar.default <- function(ind){
 #' @param ind an indicator to represent graphically (ex: effect size, Cramer's V, etc.)
 #' @description Radar plot the indicator
 #'
-#' @import ggradar dplyr scales tibble
+#' @import  dplyr scales tibble
 #'
 #' @return graph
 #'
@@ -562,7 +561,6 @@ radar.UniChar <- function(ind){
 #' @import ggplot2
 #'
 #' @return none
-
 #' @export
 #' @examples
 #' #Import data
@@ -588,3 +586,28 @@ plot.UniChar <- function(obj){
   return(p)
 }
 
+
+#' barplt.UniChar
+#'
+#' @param obj of Unichar class
+#' @param ind an indicator to represent graphically. Must be a single column Data frame
+#' @param categ default FALSE. Set true if your indicator was calculated on categorical data
+#'
+#' @import ggplot2
+#'
+#' @return \item{bargraph}{ bar plot to show}
+#' @export
+#' @examples
+
+barplt.UniChar <- function(obj, ind, categ = FALSE){
+  if(categ){
+    label = obj$catnames
+  } else{
+    label = obj$colnames
+  }
+  df <- as.data.frame(ind)
+  df['label'] <- label
+  print(df)
+  bargraph <-ggplot(data=df, aes(x=df[[2]], y=df[[1]])) + geom_bar(stat="identity", fill="steelblue") + theme_minimal()  +labs(y= colnames(df[1]), x = 'labels')
+  return(bargraph)
+}
