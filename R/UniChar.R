@@ -32,7 +32,7 @@ Perform_UniChar <- function(df, y){
   #quantitative data
   x=df[tmp[[2]]]
   instance$num=x
-  
+
   #names of numerical and categorical features
   instance$colnames <- colnames(instance$num)  #old instance$x.names
   instance$catnames <- colnames(instance$categ)
@@ -42,7 +42,7 @@ Perform_UniChar <- function(df, y){
   instance$K <- length(unique(y)) #for example, K from a kmeans() process
   #number of observations
   instance$n <- apply(df, 2, length)
-  
+
   #conditional effectives
   instance$nk <- apply(x,2,tapply,y,length)
   #global mean
@@ -51,7 +51,7 @@ Perform_UniChar <- function(df, y){
   instance$mk <- apply(x,2,tapply,y,mean)
   #Variance
   instance$v <- matrix(apply(x,2,var), nrow=instance$K, ncol = instance$ncol, byrow = TRUE)
-  
+
   class(instance) <- "UniChar"
   #return the instance
   return(instance)
@@ -107,8 +107,7 @@ vcramer.UniChar <- function(obj, y, label = NULL){
 
 #' @export
 #' @examples
-#' data <- read_excel('Autos.xlsx')
-#' df <- as.data.frame(data)
+#' df <- read_excel('Autos.xlsx')
 #' sep_data(df)
 
 sep_data <- function(df){
@@ -129,17 +128,18 @@ sep_data <- function(df){
   return(list_categ_num)
 }
 
-
 ####Numerical
 
-#' UseMethod correlation
+#' Correlation
 #'
-#' @param obj object no defined by the class
+#' @param obj of UniChar class
 #' @param y a vector of groups issued from a clustering process
 #'
-#' @return correlation
-#' @export
+#' @description To calculate correlation between numerical features of obj.
 #'
+#' @return correlation
+#'
+#' @export
 #' @examples
 #' #Import data
 #' df<- read_excel('Autos.xlsx')
@@ -149,11 +149,10 @@ sep_data <- function(df){
 #' clus<- kmeans(X,3)
 #' y <-clus$cluster
 #'
-#' #Attribut de la classe univarié
-#' obj <- univarie(X, y)
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
 #' cor <- correlation(obj,y)
-#'
-
+#' print(cor)
 
 correlation <- function(obj,y)
   UseMethod(generic = "correlation")
@@ -161,12 +160,14 @@ correlation <- function(obj,y)
 
 #' correlation.default
 #'
-#' @param obj object no defined by the class
+#' @param obj of UniChar class
 #' @param y a vector of groups issued from a clustering process
 #'
-#' @return correlation
-#' @export
+#' @description To calculate correlation between numerical features of obj.
 #'
+#' @return correlation
+#'
+#' @export
 #' @examples
 #' #Import data
 #' df<- read_excel('Autos.xlsx')
@@ -176,10 +177,11 @@ correlation <- function(obj,y)
 #' clus<- kmeans(X,3)
 #' y <-clus$cluster
 #'
-#' #Attribut de la classe univarié
-#' obj <- univarie(X, y)
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
 #' cor <- correlation(obj,y)
-#'
+#' print(cor)
+
 correlation.default <- function(obj,y){
   stop("Object is not defined in class")
 }
@@ -204,9 +206,10 @@ correlation.default <- function(obj,y){
 #' clus<- kmeans(X,3)
 #' y <-clus$cluster
 #'
-#' #Attribut de la classe univarié
-#' obj <- univarie(X, y)
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
 #' cor <- correlation(obj,y)
+#' print(cor)
 
 correlation.UniChar <- function(obj,y){
   x = obj$num
@@ -224,62 +227,6 @@ correlation.UniChar <- function(obj,y){
   return(result)
 }
 
-
-#' UseMethods Valuetest
-#'
-#' @param obj object no defined by the class
-#' @param y a vector of groups issued from a clustering process
-#'
-#' @description defined generic methods valuetest.
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' #' #Import data
-#' df<- read_excel('Autos.xlsx')
-#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
-#'
-#' #Clustering
-#' clus<- kmeans(X,3)
-#' y <-clus$cluster
-#'
-#' #Attribut de la classe univarié
-#' obj <- univarie(X, y)
-#' cor <- valuetest(obj,y)
-#'
-
-valuetest <- function(obj,y)
-  UseMethod(generic = "valuetest")
-
-#' Valuetest.default
-#'
-#' @param obj object no defined by the class
-#' @param y a vector of groups issued from a clustering process
-#'
-#' @description Return when it's not object to class defined.
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' #' #Import data
-#' df<- read_excel('Autos.xlsx')
-#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
-#'
-#' #Clustering
-#' clus<- kmeans(X,3)
-#' y <-clus$cluster
-#'
-#' #Attribut de la classe univarié
-#' obj <- univarie(X, y)
-#' cor <- valuetest(obj,y)
-#'
-valuetest.default <- function(obj,y){
-  stop("Object is not defined in class")
-}
-
-
 #' Test value
 #'
 #'
@@ -293,16 +240,81 @@ valuetest.default <- function(obj,y){
 #'
 #' @export
 #' @examples
-#' library(caret)
-#' sample <- createDataPartition(iris$Species, p=0.80, list=FALSE)
-#' iris_train <- iris[sample,]
-#' x <- iris[,1:4]
-#' y<- iris[,5]
-#' control <- trainControl(method="cv", number=10)
-#' metric <- "Accuracy"
-#' fit.knn <- train(Species~., data=iris_train, method='knn', trControl=control, metric=metric)
-#' group <- data.frame(predict(fit.knn,x))
-#' valuetest(x, group)
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
+#'
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Create object UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Function value test
+#' vt <- valuetest(obj, y)
+#' print(vt)
+
+valuetest <- function(obj,y)
+  UseMethod(generic = "valuetest")
+
+#' valuetest.default
+#'
+#' @param y a vector of groups issued from a clustering process
+#' @param obj of UniChar class
+#'
+#' @description Caracterisation function of groups with test value indicator.
+#'  Applied on numerical features of obj.
+#'
+#' @return test_values
+#'
+#' @export
+#' @examples
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
+#'
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Create object UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Function value test
+#' vt <- valuetest(obj, y)
+#' print(vt)
+
+valuetest.default <- function(obj,y){
+  stop("Object is not defined in class")
+}
+
+#' Test value
+#'
+#' @param y a vector of groups issued from a clustering process
+#' @param obj of UniChar class
+#'
+#' @description Caracterisation function of groups with test value indicator.
+#'  Applied on numerical features of obj.
+#'
+#' @return test_values
+#'
+#' @export
+#' @examples
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
+#'
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Create object UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Function value test
+#' vt <- valuetest(obj, y)
+#' print(vt)
 
 valuetest.UniChar <- function(obj,y){
   x = obj$num
@@ -314,28 +326,32 @@ valuetest.UniChar <- function(obj,y){
   return(vt)
 }
 
-#' UseMethod effectsize
+#' Effect size
 #'
 #' @param y a vector of groups issued from a clustering process
 #' @param obj of UniChar class
 #'
-#' @description defined generic methods valuetest.
+#' @description Caracterisation function of groups with effect size indicator.
+#'  Applied on numerical features of obj.
 #'
-#' @return
+#' @return effect_sizes
+#'
 #' @export
-#'
 #' @examples
-#' library(caret)
-#' sample <- createDataPartition(iris$Species, p=0.80, list=FALSE)
-#' iris_train <- iris[sample,]
-#' x <- iris[,1:4]
-#' y<- iris[,5]
-#' control <- trainControl(method="cv", number=10)
-#' metric <- "Accuracy"
-#' fit.knn <- train(Species~., data=iris_train, method='knn', trControl=control, metric=metric)
-#' group <- data.frame(predict(fit.knn,x))
-#' effectsize(x, group)
-
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
+#'
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Effect size
+#' es <- effectsize(obj, y)
+#' print(es)
 
 effectsize <- function(obj,y)
   UseMethod(generic = "effectsize")
@@ -345,23 +361,28 @@ effectsize <- function(obj,y)
 #' @param y a vector of groups issued from a clustering process
 #' @param obj of UniChar class
 #'
-#' @description Return when it's not object to class defined.
+#' @description Caracterisation function of groups with effect size indicator.
+#'  Applied on numerical features of obj.
 #'
-#' @return
+#' @return effect_sizes
+#'
 #' @export
-#'
 #' @examples
-#' library(caret)
-#' sample <- createDataPartition(iris$Species, p=0.80, list=FALSE)
-#' iris_train <- iris[sample,]
-#' x <- iris[,1:4]
-#' y<- iris[,5]
-#' control <- trainControl(method="cv", number=10)
-#' metric <- "Accuracy"
-#' fit.knn <- train(Species~., data=iris_train, method='knn', trControl=control, metric=metric)
-#' group <- data.frame(predict(fit.knn,x))
-#' effectsize(x, group)
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
 #'
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Effect size
+#' es <- effectsize(obj, y)
+#' print(es)
+
 effectsize.default <- function(obj,y){
   stop("Object is not defined in class")
 }
@@ -378,16 +399,20 @@ effectsize.default <- function(obj,y){
 #'
 #' @export
 #' @examples
-#' library(caret)
-#' sample <- createDataPartition(iris$Species, p=0.80, list=FALSE)
-#' iris_train <- iris[sample,]
-#' x <- iris[,1:4]
-#' y<- iris[,5]
-#' control <- trainControl(method="cv", number=10)
-#' metric <- "Accuracy"
-#' fit.knn <- train(Species~., data=iris_train, method='knn', trControl=control, metric=metric)
-#' group <- data.frame(predict(fit.knn,x))
-#' effectsize(x, group)
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
+#'
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Effect size
+#' es <- effectsize(obj, y)
+#' print(es)
 
 effectsize.UniChar <- function(obj,y){
   x = obj$num
@@ -420,27 +445,11 @@ effectsize.UniChar <- function(obj,y){
 }
 
 
-
 #Radar graph
 
-#' UseMethod generic radar
+#' Radar plot
 #'
-#' @param ind
-#'
-#' @import ggradar dplyr scales tibble
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
-radar <- function(ind)
-  UseMethod(generic = "radar")
-
-#' Plot radar
-#'
-#' @param fct
-#'
+#' @param ind an indicator to represent graphically (ex: effect size, Cramer's V, etc.)
 #' @description Radar plot the indicator
 #'
 #' @import ggradar dplyr scales tibble
@@ -448,8 +457,55 @@ radar <- function(ind)
 #' @return graph
 #'
 #' @export
-#'
 #' @examples
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
+#'
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Effect size
+#' vt <- valuetest(obj, y)
+#'
+#' #Plot radar
+#' radar(vt)
+
+radar <- function(ind)
+  UseMethod(generic = "radar")
+
+#' Radar plot
+#'
+#' @param ind an indicator to represent graphically (ex: effect size, Cramer's V, etc.)
+#' @description Radar plot the indicator
+#'
+#' @import ggradar dplyr scales tibble
+#'
+#' @return graph
+#'
+#' @export
+#' @examples
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
+#'
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Effect size
+#' vt <- valuetest(obj, y)
+#'
+#' #Plot radar
+#' radar(vt)
+
 radar.default <- function(ind){
   vtradar <- ind %>%
     as_tibble() %>%
@@ -469,21 +525,37 @@ radar.default <- function(ind){
 #'
 #' @export
 #' @examples
-#' #TODO
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
 #'
-radar.UniChar <- function(obj){
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Effect size
+#' vt <- valuetest(obj, y)
+#'
+#' #Plot radar
+#' radar(vt)
+
+radar.UniChar <- function(ind){
   vtradar <- ind %>%
     as_tibble() %>%
     mutate_each(rescale)
   radar <- cbind(row.names(ind), vtradar)
-  ggradar(radar, legend.position="right", legend.text.size=9, group.point.size=3, group.line.width=0.5)
+  r <- ggradar(radar, legend.position="right", legend.text.size=9, group.point.size=3, group.line.width=0.5)
+  return(r)
 }
-
 
 #Data Representation with the two most correlated features
 #' Bidimensional plot of numerical features of obj
 #'
 #' @param obj of UniChar class
+#'
 #' @description Bidimensional plot aplied on numerical features of obj.
 #'              Selecteting the two most correlated features.
 #'
@@ -493,13 +565,26 @@ radar.UniChar <- function(obj){
 
 #' @export
 #' @examples
-#' #TODO
+#' #Import data
+#' df<- read_excel('Autos.xlsx')
+#' X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
 #'
-ggplot.UniChar <- function(obj){
+#' #Clustering
+#' clus<- kmeans(X,3)
+#' y <-clus$cluster
+#'
+#' #Attribut de la classe UniChar
+#' obj <- Perform_UniChar(df,y)
+#'
+#' #Plot clustering
+#' plot(obj)
+
+plot.UniChar <- function(obj){
   group <- as.factor(obj$y.values)
   co <- correlation(obj,obj$y.values)
-  axemax <- names(tail(sort(co[5,]), 2))
+  axemax <- names(tail(sort(co[obj$K+1,]), 2))
   df <- obj$num[,axemax]
-  ggplot(obj$num, aes(x = df[[1]], y = df[[2]], colour=group))+geom_point()+labs(x=axemax[[1]], y = axemax[[2]])
+  p <- ggplot(obj$num, aes(x = df[[1]], y = df[[2]], colour=group))+geom_point()+labs(x=axemax[[1]], y = axemax[[2]])
+  return(p)
 }
 
