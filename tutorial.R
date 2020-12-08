@@ -33,6 +33,8 @@ vCramer["label"] <- obj$catnames
 colnames(vCramer[1])
 barplt.UniChar(obj, vCramer, TRUE)
 
+vtest.UniChar(obj,y, 'make')
+#unable to plot yet
 
 #Quantitative
 #Correlation, caracterisation des partitions
