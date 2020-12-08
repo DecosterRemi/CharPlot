@@ -9,6 +9,8 @@ Please first install devtools and roxygen2 to build the package:
 ```R
   install.packages("roxygen2");
   install.packages("devtools");
+  devtools::install_github("ricardo-bion/ggradar", 
+                          dependencies = TRUE);
 ```
   
 Then within RStudio, please go to Build --> Configure Build Tools..., then tick "Generate documentation with Roxygen". 
