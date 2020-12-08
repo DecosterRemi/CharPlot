@@ -1,0 +1,94 @@
+---
+title: "Tutorial"
+author: "Rémi Decoster, Pauline Laine, Romain Pic"
+date: "08/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Réalisation d'un clustering k-means 
+```{r}
+library(ClusterCharPlot)
+library(readxl)
+library(stats)
+```
+
+```{r}
+df<- read_excel('Autos.xlsx')
+X<-df[,c('length','width','height','engine-size','compression-ratio','horsepower','city-mpg','highway-mpg')]
+clus<- kmeans(X,3)
+y <-clus$cluster
+```
+
+## Caractérisation univarié 
+
+```{r}
+#Création de l'objet de la classe UniChar à partir de notre jeu de données complet
+obj <- Perform_UniChar(df,y)
+plot(obj)
+```
+```{r}
+#Analyse pour les données qualitative
+vCramer <- vcramer.UniChar(obj,y)
+print(vCramer)
+vCramer["label"] <- obj$catnames
+colnames(vCramer[1])
+barplt.UniChar(obj, vCramer, TRUE)
+```
+```{r}
+#Analyse pour les données 
+#Correlation, caracterisation des partitions
+cor <- correlation(obj,y)
+print(cor)
+
+#Barplot de la correlation
+tmp <- as.data.frame(cor)
+(correlations <- t(tmp[4,]))
+ClusterCharPlot::barplt.UniChar(obj, correlations)
+```
+
+
+```{r}
+#Valeur test, caracterisation des groupes
+vt <- valuetest(obj,y)
+print(vt)
+radar(vt)
+```
+
+
+```{r}
+#Effect size, caracterisation des groupes
+es <- effectsize(obj,y)
+print(es)
+radar(es)
+```
+
+## Carastérisation multivarié
+```{r}
+#Création de l'objet multivarié
+multivariate=multivariate_charac(X,y)
+
+#Printing and plotting the results of multivariate_charac
+print(multivariate$distance_matrix)
+print(multivariate$confusion_matrix)
+print(multivariate$correlation)
+print(multivariate$squared_correlation)
+plot(multivariate$correlation)
+```
+
+## Calcul des mesures
+
+```{r}
+#Création de l'objet
+measures=indexes(X,y)
+
+#Printing and plotting the results of indexes
+print(measures$internal)
+print(measures$external)
+plot(measures)
+```
+
+
