@@ -20,7 +20,8 @@ Please first install devtools and roxygen2 to build the package:
   install.packages('ggrepel');
   install.packages('ggforce');
   install.packages('gridExtra');
-  install.packages('creditmodel')
+  install.packages('creditmodel');
+  install.packages("FactoMineR");
   devtools::install_github("ricardo-bion/ggradar", 
                           dependencies = TRUE);
 ```
