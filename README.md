@@ -9,6 +9,18 @@ Please first install devtools and roxygen2 to build the package:
 ```R
   install.packages("roxygen2");
   install.packages("devtools");
+  install.packages("dplyr");
+  install.packages("scales");
+  install.packages("tibble"); 
+  install.packages('stats');
+  install.packages('caret');
+  install.packages('e1071');
+  install.packages('rlist');
+  install.packages('ggplot2');
+  install.packages('ggrepel');
+  install.packages('ggforce');
+  install.packages('gridExtra');
+  install.packages('creditmodel')
   devtools::install_github("ricardo-bion/ggradar", 
                           dependencies = TRUE);
 ```
