@@ -95,6 +95,40 @@ vcramer.UniChar <- function(obj, y, label = NULL){
   }
 }
 
+#' v.test
+#'
+#' @param obj of UniChar class
+#' @param y a data frame representing groups from a clustering process on obj$data
+#' @param label a specific label variable
+#'
+#' @description calculate test values according to the labeled data and the group y
+#' @import FactoMineR
+#'
+#' @return \item{result}{ a dataframe with test values}
+#' @export
+#'
+#' @examples
+#' autos = readxl::read_excel("Autos.xlsx")
+#' tmp = sep_data(autos)
+#' clus = kmeans(autos[tmp[[2]]], 4)
+#' y <- clus$cluster
+#' obj <- Perform_UniChar(autos,y)
+#' vtest.UniChar(obj, y, 'make')
+vtest.UniChar <- function(obj, y, label){
+  v.test = c()
+  df <- obj$categ[label]
+  df['group'] <- y
+  res = catdes(df, num.var=1, proba=1)
+  for(elt in res$quanti){
+    df <- as.data.frame(elt)
+    if( colnames(df)[1]=="v.test" ){
+      v.test <- c(v.test, df["v.test"][[1]])
+    }
+  }
+  result <- as.data.frame(v.test)
+  #rownames(result) <- c(unique(obj$categ[label]))
+  return(result)
+}
 
 #' sep_data
 #'
