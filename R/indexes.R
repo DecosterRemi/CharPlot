@@ -76,7 +76,7 @@ indexes <- function(X,y,y_true=NULL){
    # Silhouette
    S_i=0
    for (i in 1:n){
-      a_i=sum(D[y!=y[i],i])/(sum(y==y[i])-1)
+      a_i=sum(D[y==y[i],i])/(sum(y==y[i])-1)
       
       other_clusters=unique(y[y!=y[i]])
       liste_b_i=vector(mode='numeric',length = length(other_clusters))
