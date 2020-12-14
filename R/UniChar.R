@@ -126,7 +126,7 @@ vtest.UniChar <- function(obj, y, label){
     }
   }
   result <- as.data.frame(v.test)
-  #rownames(result) <- c(unique(obj$categ[label]))
+  rownames(result) <- (unique(obj$categ[label]))[[1]]
   return(result)
 }
 
@@ -485,7 +485,7 @@ effectsize.UniChar <- function(obj,y){
 #' @param ind an indicator to represent graphically (ex: effect size, Cramer's V, etc.)
 #' @description Radar plot the indicator
 #'
-#' @import  dplyr scales tibble
+#' @import ggradar dplyr scales tibble
 #'
 #' @return graph
 #'
@@ -516,7 +516,7 @@ radar <- function(ind)
 #' @param ind an indicator to represent graphically (ex: effect size, Cramer's V, etc.)
 #' @description Radar plot the indicator
 #'
-#' @import  dplyr scales tibble
+#' @import ggradar dplyr scales tibble
 #'
 #' @return graph
 #'
@@ -552,7 +552,7 @@ radar.default <- function(ind){
 #' @param ind an indicator to represent graphically (ex: effect size, Cramer's V, etc.)
 #' @description Radar plot the indicator
 #'
-#' @import  dplyr scales tibble
+#' @import ggradar dplyr scales tibble
 #'
 #' @return graph
 #'
