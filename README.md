@@ -28,7 +28,7 @@ Please first install devtools and roxygen2 to build the package:
   
 Then within RStudio, please go to Build --> Configure Build Tools..., then tick "Generate documentation with Roxygen". 
 Roxygen Options pop up must appear (otherwise click on Configure...). Tick "Install and Restart" or "Build & Reload" according to your RStudio version.
-Finally, build the project with "Clean and Rebuild" and you are all set up.
+Finally, build the project with "Clean and Rebuild" and you are all set up. If you encounter troubles during the installation, please try to run ```R roxygen2::roxygenise();```, it might solve some of them.
 
 You can now use our functions anywhere by loading our package with:
 ```R
